@@ -1,15 +1,11 @@
 CREATE SCHEMA IF NOT EXISTS task_manage_sc;
-CREATE TABLE IF NOT EXISTS task_manage_sc.roles
-(
-    id SERIAL PRIMARY KEY,
-    type VARCHAR(55) NOT NULL UNIQUE
-);
 
 CREATE TABLE IF NOT EXISTS task_manage_sc.users
 (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(355) NOT NULL
+    password VARCHAR(355) NOT NULL,
+    role VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS task_manage_sc.tasks
@@ -25,15 +21,7 @@ CREATE TABLE IF NOT EXISTS task_manage_sc.tasks
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS task_manage_sc.user_role
-(
-    id SERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    role_id BIGINT NOT NULL,
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES task_manage_sc.users ON DELETE CASCADE,
-    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES task_manage_sc.roles ON DELETE CASCADE
 
-);
 CREATE  TABLE IF NOT EXISTS task_manage_sc.comments
 (
     id SERIAL PRIMARY KEY,

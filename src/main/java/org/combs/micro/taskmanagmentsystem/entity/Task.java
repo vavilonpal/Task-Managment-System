@@ -37,13 +37,15 @@ public class Task {
 
     @Column(name = "status", nullable = false)
     @NotNull(message = "Please set status of the task")
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
     @Column(name = "priority", nullable = false)
     @NotNull(message = "Please set priority of the task")
+    @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
-    @OneToMany(mappedBy = "task",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "task",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     @ManyToOne
