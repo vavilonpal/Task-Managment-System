@@ -140,7 +140,7 @@ public class TaskController {
             summary ="Обновление задачи",
             description = "Позволяет авторизованному пользователю обновить созданную им задачу"
     )
-    @SecurityRequirement(name = "JWT")
+//    @SecurityRequirement(name = "JWT")
     @PutMapping
     public ResponseEntity<?> updateTask(@RequestBody @Valid Task task, BindingResult bindingResult) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

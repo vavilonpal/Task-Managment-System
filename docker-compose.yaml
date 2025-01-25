@@ -1,0 +1,54 @@
+services:
+  tasks_db:
+    image: postgres:15
+    restart: "no"
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  flyway_task_manage:
+    image: flyway/flyway:8.5.0
+    container_name: flyway_task_manage
+    depends_on:
+      tasks_db:
+        condition: service_healthy
+    environment:
+      FLYWAY_URL: jdbc:postgresql://tasks_db:5436/postgres
+      FLYWAY_USER: admin
+      FLYWAY_PASSWORD: admin
+    volumes:
+      - C:/Users/admin/IdeaProjects/Task-Managment-System/src/main/resources/db/migrations:/flyway/sql
+    command: -url=jdbc:postgresql://tasks_db:5436/postgres -user=admin -password=admin migrate
+
+  task-management-system:
+    image: task-management-system:latest
+    build:
+      context: .
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: no
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    depends_on:
+      - tasks_db
+
+
+volumes:
+  postgres_data:
